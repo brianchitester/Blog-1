@@ -14,7 +14,8 @@
       "react/jsx-one-expression-per-line": "off",
       "arrow-parens": "off",
       "react/no-unescaped-entities": "0",
-      "operator-linebreak": "off"
+      "operator-linebreak": "off",
+      "class-methods-use-this": "off"
     },
     "extends": [
       "airbnb"

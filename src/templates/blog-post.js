@@ -12,24 +12,13 @@ import './blog-post.less';
 import 'prismjs/themes/prism.css';
 
 class BlogPostTemplate extends React.Component {
-  getTags() {
+  getTagStrings() {
     if (!this.props.data.markdownRemark.frontmatter.tags) {
       return null;
     }
-    const tags = this.props.data.markdownRemark.frontmatter.tags
+    return this.props.data.markdownRemark.frontmatter.tags
       .map(a => a.toLowerCase())
-      .sort()
-      .map(tag => (
-        <li>
-          <Tag key={tag} tagName={tag} />
-        </li>
-      ));
-    return (
-      <div className={styles.tagWrap}>
-        Tagged In:
-        <ul className={tagStyles.tagInline}>{tags}</ul>
-      </div>
-    );
+      .sort();
   }
 
   getAuthor() {
@@ -40,24 +29,48 @@ class BlogPostTemplate extends React.Component {
     return this.props.data.allAuthorsJson.nodes.find(i => i.id === authorId);
   }
 
+  renderTagComponents(rawTags) {
+    const tags = rawTags.map(tag => (
+      <li>
+        <Tag key={tag} tagName={tag} />
+      </li>
+    ));
+    return (
+      <div className={styles.tagWrap}>
+        Tagged In:
+        <ul className={tagStyles.tagInline}>{tags}</ul>
+      </div>
+    );
+  }
+
   render() {
     const post = this.props.data.markdownRemark;
     const siteTitle = this.props.data.site.siteMetadata.title;
     const { previous, next, featuredImages = [] } = this.props.pageContext;
-
+    const { date, title, description, excerpt } = post.frontmatter;
+    const rawTags = this.getTagStrings();
+    const author = this.getAuthor();
     return (
       <Layout location={this.props.location} title={siteTitle}>
         <SEO
-          title={post.frontmatter.title}
-          description={post.frontmatter.description || post.excerpt}
+          title={title}
+          description={description || excerpt}
           images={featuredImages}
+          meta={[
+            {
+              name: 'article:published_time',
+              content: `${new Date(date).toISOString()}`,
+            },
+            { name: 'article:author', content: author.name },
+            ...rawTags.map(i => ({ name: 'article:tags', content: i })),
+          ]}
         />
-        <h1>{post.frontmatter.title}</h1>
-        <Bio author={this.getAuthor()}>
-          <time className={styles.time}>{post.frontmatter.date}</time>
+        <h1>{title}</h1>
+        <Bio author={author}>
+          <time className={styles.time}>{date}</time>
         </Bio>
         <div dangerouslySetInnerHTML={{ __html: post.html }} />
-        {this.getTags()}
+        {this.renderTagComponents(rawTags)}
         <hr className={styles.hr} />
 
         <ul className={styles.navButtons}>
@@ -98,6 +111,8 @@ export const pageQuery = graphql`
         avatar
         twitter
         github
+        linkedin
+        blog
       }
     }
     site {

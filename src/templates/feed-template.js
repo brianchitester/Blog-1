@@ -27,7 +27,7 @@ const Feed = ({ data, location, pageContext = {} }) => {
   return (
     <Layout location={location} title={siteTitle}>
       <SEO
-        title="All posts"
+        title="Revved"
         keywords={['blog', 'gatsby', 'javascript', 'react']}
       />
       <header className={styles.headlineWrap}>

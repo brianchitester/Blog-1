@@ -11,7 +11,7 @@ import Helmet from 'react-helmet';
 import { useStaticQuery, graphql } from 'gatsby';
 import { snowplowScript } from './snowplow.js';
 
-function SEO({ description, lang, meta, keywords, title, images = [] }) {
+function SEO({ description, lang, meta, keywords, title, images }) {
   const { site } = useStaticQuery(
     graphql`
       query {
@@ -85,16 +85,15 @@ function SEO({ description, lang, meta, keywords, title, images = [] }) {
           name: 'google-site-verification',
           content: 'aQ3mfyY1q1ouMw6O_bslHPXVWBjTZZZwyHY3WyOXjzE',
         },
-      ]
-        .concat(
-          keywords.length > 0
-            ? {
-                name: 'keywords',
-                content: keywords.join(', '),
-              }
-            : [],
-        )
-        .concat(meta)}
+        ...meta,
+      ].concat(
+        keywords.length > 0
+          ? {
+              name: 'keywords',
+              content: keywords.join(', '),
+            }
+          : [],
+      )}
     >
       <script>{snowplowScript}</script>
     </Helmet>
@@ -106,6 +105,7 @@ SEO.defaultProps = {
   meta: [],
   keywords: [],
   description: '',
+  images: [],
 };
 
 SEO.propTypes = {
@@ -114,6 +114,7 @@ SEO.propTypes = {
   meta: PropTypes.arrayOf(PropTypes.object),
   keywords: PropTypes.arrayOf(PropTypes.string),
   title: PropTypes.string.isRequired,
+  images: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default SEO;

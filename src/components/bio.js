@@ -12,6 +12,8 @@ import Image from 'gatsby-image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTwitter } from '@fortawesome/free-brands-svg-icons/faTwitter';
 import { faGithub } from '@fortawesome/free-brands-svg-icons/faGithub';
+import { faLinkedin } from '@fortawesome/free-brands-svg-icons/faLinkedin';
+import { faPencilAlt } from '@fortawesome/free-solid-svg-icons/faPencilAlt';
 import styles from './bio.module.less';
 
 const bioQuery = graphql`
@@ -35,7 +37,8 @@ function Bio({ author, children }) {
   if (!author) {
     return null;
   }
-  const { name, avatar, twitter, github } = author;
+  const { name, avatar, twitter, github, linkedin, blog } = author;
+  const hasSocial = twitter || github || linkedin || blog;
   // todo: this needs to be broken up better
   return (
     <StaticQuery
@@ -64,22 +67,40 @@ function Bio({ author, children }) {
             <span className={styles.nameWrap}>
               <div className={styles.social}>
                 <p>{name}</p>
-                <span className={github && twitter ? styles.socialIcons : ''}>
+                <span className={hasSocial ? styles.socialIcons : ''}>
                   {twitter && (
                     <a href={`https://twitter.com/${twitter}`}>
                       <FontAwesomeIcon
+                        className={styles.icon}
                         role="button"
                         icon={faTwitter}
-                        size="sm"
                       />
                     </a>
                   )}
                   {github && (
                     <a href={`https://github.com/${github}`}>
                       <FontAwesomeIcon
+                        className={styles.icon}
                         role="button"
                         icon={faGithub}
-                        size="sm"
+                      />
+                    </a>
+                  )}
+                  {linkedin && (
+                    <a href={linkedin}>
+                      <FontAwesomeIcon
+                        className={styles.icon}
+                        role="button"
+                        icon={faLinkedin}
+                      />
+                    </a>
+                  )}
+                  {blog && (
+                    <a href={blog}>
+                      <FontAwesomeIcon
+                        className={styles.icon}
+                        role="button"
+                        icon={faPencilAlt}
                       />
                     </a>
                   )}
