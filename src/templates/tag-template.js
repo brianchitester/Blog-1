@@ -21,6 +21,7 @@ const Tags = ({ pageContext, data }) => {
       date={node.frontmatter.date}
       description={node.frontmatter.description || node.excerpt}
       author={authors[node.frontmatter.author]}
+      featuredImage={node.frontmatter.featuredImage}
     />
   ));
   return (
@@ -61,6 +62,13 @@ export const pageQuery = graphql`
             description
             permalink
             author
+            featuredImage {
+              childImageSharp {
+                fixed(width: 150) {
+                  ...GatsbyImageSharpFixed
+                }
+              }
+            }
           }
         }
       }

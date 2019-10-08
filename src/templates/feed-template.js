@@ -14,6 +14,7 @@ const Feed = ({ data, location, pageContext = {} }) => {
     (acc, { node }) => ({ ...acc, [node.id]: node.name }),
     {},
   );
+
   const renderFeed = posts.map(({ node }) => (
     <PostSummary
       {...node.frontmatter}
@@ -22,8 +23,10 @@ const Feed = ({ data, location, pageContext = {} }) => {
       slug={node.frontmatter.permalink || node.fields.slug}
       description={node.frontmatter.description || node.excerpt}
       author={authors[node.frontmatter.author]}
+      featuredImage={node.frontmatter.featuredImage}
     />
   ));
+
   return (
     <Layout location={location} title={siteTitle}>
       <SEO
@@ -82,6 +85,13 @@ export const pageQuery = graphql`
             description
             permalink
             author
+            featuredImage {
+              childImageSharp {
+                fixed(width: 150) {
+                  ...GatsbyImageSharpFixed
+                }
+              }
+            }
           }
         }
       }

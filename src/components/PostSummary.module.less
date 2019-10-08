@@ -2,41 +2,53 @@
 @import (reference) '../components/less/mixins.less';
 
 .article {
-    .px-rem(margin-bottom, 54);
+  .px-rem(margin-bottom, 54);
+  display: flex;
+}
+
+.featuredImage {
+  width: 100px;
+  margin-right: 20px;
+  img {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+  }
 }
 
 .h3Style {
-    .px-rem(margin-bottom, 18);
+  .px-rem(margin-bottom, 18);
 
-    a {
-        text-decoration: none;
+  a {
+    text-decoration: none;
 
-        &:visited {
-            color: @link-visited;
-            text-decoration: none;
-        }
-
-        &:hover {
-            text-decoration: underline;
-        }
+    &:visited {
+      color: @link-visited;
+      text-decoration: none;
     }
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 
 .postMeta {
-    display: flex;
-    color: @body-mid;
-    .font-unit-rem(16);
+  display: flex;
+  color: @body-mid;
+  .font-unit-rem(16);
 
-    .author {
-        font-weight: 900;
-    }
+  .author {
+    font-weight: 900;
+  }
 }
 
 .dot {
-    // adds a dot between author name and date
-    &:after {
-        content: " \2219 ";
-        .px-em-padding(0, 8, 0, 8);
-        font-weight: 900;
-    }
+  // adds a dot between author name and date
+  &:after {
+    content: ' \2219 ';
+    .px-em-padding(0, 8, 0, 8);
+    font-weight: 900;
+  }
 }
