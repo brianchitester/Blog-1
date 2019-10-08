@@ -69,7 +69,10 @@ function Bio({ author, children }) {
                 <p>{name}</p>
                 <span className={hasSocial ? styles.socialIcons : ''}>
                   {twitter && (
-                    <a href={`https://twitter.com/${twitter}`}>
+                    <a
+                      aria-label={`${name}'s twitter`}
+                      href={`https://twitter.com/${twitter}`}
+                    >
                       <FontAwesomeIcon
                         className={styles.icon}
                         role="button"
@@ -78,7 +81,10 @@ function Bio({ author, children }) {
                     </a>
                   )}
                   {github && (
-                    <a href={`https://github.com/${github}`}>
+                    <a
+                      aria-label={`${name}'s github`}
+                      href={`https://github.com/${github}`}
+                    >
                       <FontAwesomeIcon
                         className={styles.icon}
                         role="button"
@@ -87,7 +93,7 @@ function Bio({ author, children }) {
                     </a>
                   )}
                   {linkedin && (
-                    <a href={linkedin}>
+                    <a aria-label={`${name}'s linkedin`} href={linkedin}>
                       <FontAwesomeIcon
                         className={styles.icon}
                         role="button"
@@ -96,7 +102,7 @@ function Bio({ author, children }) {
                     </a>
                   )}
                   {blog && (
-                    <a href={blog}>
+                    <a aria-label={`${name}'s blog`} href={blog}>
                       <FontAwesomeIcon
                         className={styles.icon}
                         role="button"

@@ -31,8 +31,8 @@ class BlogPostTemplate extends React.Component {
 
   renderTagComponents(rawTags) {
     const tags = rawTags.map(tag => (
-      <li>
-        <Tag key={tag} tagName={tag} />
+      <li key={tag}>
+        <Tag tagName={tag} />
       </li>
     ));
     return (
