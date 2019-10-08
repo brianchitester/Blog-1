@@ -1,4 +1,5 @@
 import React from 'react';
+import visit from 'unist-util-visit';
 
 // Components
 import { graphql } from 'gatsby';
@@ -14,16 +15,26 @@ const Tags = ({ pageContext, data }) => {
     (acc, { node }) => ({ ...acc, [node.id]: node.name }),
     {},
   );
-  const renderedPost = posts.map(({ node }) => (
-    <PostSummary
-      title={node.frontmatter.title || node.fields.slug}
-      slug={node.frontmatter.permalink || node.fields.slug}
-      date={node.frontmatter.date}
-      description={node.frontmatter.description || node.excerpt}
-      author={authors[node.frontmatter.author]}
-      featuredImage={node.frontmatter.featuredImage}
-    />
-  ));
+  const renderedPost = posts.map(({ node }) => {
+    let featuredImages = [];
+    visit(node.htmlAst, [{ tagName: 'img', type: 'element' }], postNode => {
+      if (postNode && postNode.properties && postNode.properties.src) {
+        featuredImages = featuredImages.concat(postNode.properties.src);
+      }
+    });
+
+    return (
+      <PostSummary
+        title={node.frontmatter.title || node.fields.slug}
+        slug={node.frontmatter.permalink || node.fields.slug}
+        date={node.frontmatter.date}
+        description={node.frontmatter.description || node.excerpt}
+        author={authors[node.frontmatter.author]}
+        thumbnail={node.frontmatter.thumbnail}
+        featuredImages={featuredImages}
+      />
+    );
+  });
   return (
     <Layout title={siteTitle}>
       <SEO title={siteTitle} keywords={[siteTitle]} />
@@ -56,13 +67,14 @@ export const pageQuery = graphql`
           fields {
             slug
           }
+          htmlAst
           frontmatter {
             date(formatString: "MMMM DD, YYYY")
             title
             description
             permalink
             author
-            featuredImage {
+            thumbnail {
               childImageSharp {
                 fixed(width: 150) {
                   ...GatsbyImageSharpFixed

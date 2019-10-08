@@ -1,5 +1,6 @@
 import React from 'react';
 import { graphql } from 'gatsby';
+import visit from 'unist-util-visit';
 import styles from './feed-template.module.less';
 import Layout from '../components/layout';
 import SEO from '../components/seo';
@@ -15,17 +16,26 @@ const Feed = ({ data, location, pageContext = {} }) => {
     {},
   );
 
-  const renderFeed = posts.map(({ node }) => (
-    <PostSummary
-      {...node.frontmatter}
-      key={node.fields.slug}
-      title={node.frontmatter.title || node.fields.slug}
-      slug={node.frontmatter.permalink || node.fields.slug}
-      description={node.frontmatter.description || node.excerpt}
-      author={authors[node.frontmatter.author]}
-      featuredImage={node.frontmatter.featuredImage}
-    />
-  ));
+  const renderFeed = posts.map(({ node }) => {
+    let featuredImages = [];
+    visit(node.htmlAst, [{ tagName: 'img', type: 'element' }], postNode => {
+      if (postNode && postNode.properties && postNode.properties.src) {
+        featuredImages = featuredImages.concat(postNode.properties.src);
+      }
+    });
+    return (
+      <PostSummary
+        {...node.frontmatter}
+        key={node.fields.slug}
+        title={node.frontmatter.title || node.fields.slug}
+        slug={node.frontmatter.permalink || node.fields.slug}
+        description={node.frontmatter.description || node.excerpt}
+        author={authors[node.frontmatter.author]}
+        thumbnail={node.frontmatter.thumbnail}
+        featuredImages={featuredImages}
+      />
+    );
+  });
 
   return (
     <Layout location={location} title={siteTitle}>
@@ -79,13 +89,14 @@ export const pageQuery = graphql`
           fields {
             slug
           }
+          htmlAst
           frontmatter {
             date(formatString: "MMMM DD, YYYY")
             title
             description
             permalink
             author
-            featuredImage {
+            thumbnail {
               childImageSharp {
                 fixed(width: 150) {
                   ...GatsbyImageSharpFixed
