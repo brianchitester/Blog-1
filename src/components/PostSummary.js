@@ -7,12 +7,13 @@ import styles from './PostSummary.module.less';
 const renderThumbnail = (slug, title, thumbnail, featuredImages) => {
   if (thumbnail) {
     return (
-      <Link style={{ boxShadow: 'none' }} to={slug}>
+      <Link
+        style={{ boxShadow: 'none' }}
+        to={slug}
+        className={styles.thumbnail}
+      >
         {thumbnail.childImageSharp && (
-          <Img
-            className={styles.thumbnail}
-            fixed={thumbnail.childImageSharp.fixed}
-          />
+          <Img fluid={thumbnail.childImageSharp.fluid} />
         )}
       </Link>
     );
@@ -20,12 +21,12 @@ const renderThumbnail = (slug, title, thumbnail, featuredImages) => {
 
   if (featuredImages.length > 0) {
     return (
-      <Link style={{ boxShadow: 'none' }} to={slug}>
-        <img
-          className={styles.thumbnail}
-          src={featuredImages[0].toString()}
-          alt={title}
-        />
+      <Link
+        style={{ boxShadow: 'none' }}
+        to={slug}
+        className={styles.thumbnail}
+      >
+        <img src={featuredImages[0].toString()} alt={title} />
       </Link>
     );
   }
@@ -44,7 +45,7 @@ export default function PostSummary({
   return (
     <article key={slug} className={styles.article}>
       {renderThumbnail(slug, title, thumbnail, featuredImages)}
-      <div>
+      <div className={styles.summary}>
         <h3 className={styles.h3Style}>
           <Link style={{ boxShadow: 'none' }} to={slug}>
             {title}

@@ -76,8 +76,8 @@ export const pageQuery = graphql`
             author
             thumbnail {
               childImageSharp {
-                fixed(width: 150) {
-                  ...GatsbyImageSharpFixed
+                fluid(maxWidth: 300) {
+                  ...GatsbyImageSharpFluid
                 }
               }
             }

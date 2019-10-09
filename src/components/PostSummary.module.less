@@ -4,17 +4,19 @@
 .article {
   .px-rem(margin-bottom, 54);
   display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
 }
 
 .thumbnail {
-  max-width: 150px;
   margin-right: 20px;
-  img {
-    width: auto;
-    height: auto;
-    max-width: 100%;
-    max-height: 100%;
-  }
+  flex: 0 1 25%;
+  margin-right: 20px;
+  margin-top: 5px;
+}
+
+.summary {
+  flex: 3 1 70%;
 }
 
 .h3Style {
