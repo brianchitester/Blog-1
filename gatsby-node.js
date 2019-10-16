@@ -43,6 +43,7 @@ exports.createPages = ({ graphql, actions }) => {
     // Create blog posts pages.
     const posts = result.data.allMarkdownRemark.edges;
     let tags = [];
+    const postFeaturedImages = {};
     posts.forEach((post, index) => {
       const previous =
         index === posts.length - 1 ? null : posts[index + 1].node;
@@ -55,6 +56,9 @@ exports.createPages = ({ graphql, actions }) => {
           featuredImages = featuredImages.concat(node.properties.src);
         }
       });
+      if (featuredImages.length > 0) {
+        postFeaturedImages[post.node.fields.slug] = featuredImages;
+      }
       createPage({
         path: url,
         component: blogPost,
@@ -105,6 +109,7 @@ exports.createPages = ({ graphql, actions }) => {
           limit: postsPerPage,
           skip: index * postsPerPage,
           current: index + 1,
+          postFeaturedImages,
         },
       });
     });

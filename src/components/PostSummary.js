@@ -18,8 +18,7 @@ const renderThumbnail = (slug, title, thumbnail, featuredImages) => {
       </Link>
     );
   }
-
-  if (featuredImages.length > 0) {
+  if (featuredImages && featuredImages.length > 0) {
     return (
       <Link
         style={{ boxShadow: 'none' }}

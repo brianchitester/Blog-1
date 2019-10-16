@@ -1,6 +1,5 @@
 import React from 'react';
 import { graphql } from 'gatsby';
-import visit from 'unist-util-visit';
 import styles from './feed-template.module.less';
 import Layout from '../components/layout';
 import SEO from '../components/seo';
@@ -8,7 +7,7 @@ import PostSummary from '../components/PostSummary';
 import Pagination from '../components/Pagination';
 
 const Feed = ({ data, location, pageContext = {} }) => {
-  const { totalCount, current = 1, limit } = pageContext;
+  const { totalCount, current = 1, limit, postFeaturedImages } = pageContext;
   const siteTitle = data.site.siteMetadata.title;
   const posts = data.allMarkdownRemark.edges;
   const authors = data.allAuthorsJson.edges.reduce(
@@ -16,26 +15,18 @@ const Feed = ({ data, location, pageContext = {} }) => {
     {},
   );
 
-  const renderFeed = posts.map(({ node }) => {
-    let featuredImages = [];
-    visit(node.htmlAst, [{ tagName: 'img', type: 'element' }], postNode => {
-      if (postNode && postNode.properties && postNode.properties.src) {
-        featuredImages = featuredImages.concat(postNode.properties.src);
-      }
-    });
-    return (
-      <PostSummary
-        {...node.frontmatter}
-        key={node.fields.slug}
-        title={node.frontmatter.title || node.fields.slug}
-        slug={node.frontmatter.permalink || node.fields.slug}
-        description={node.frontmatter.description || node.excerpt}
-        author={authors[node.frontmatter.author]}
-        thumbnail={node.frontmatter.thumbnail}
-        featuredImages={featuredImages}
-      />
-    );
-  });
+  const renderFeed = posts.map(({ node }) => (
+    <PostSummary
+      {...node.frontmatter}
+      key={node.fields.slug}
+      title={node.frontmatter.title || node.fields.slug}
+      slug={node.frontmatter.permalink || node.fields.slug}
+      description={node.frontmatter.description || node.excerpt}
+      author={authors[node.frontmatter.author]}
+      thumbnail={node.frontmatter.thumbnail}
+      featuredImages={postFeaturedImages[node.fields.slug]}
+    />
+  ));
 
   return (
     <Layout location={location} title={siteTitle}>
