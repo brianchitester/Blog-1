@@ -87,6 +87,7 @@ exports.createPages = ({ graphql, actions }) => {
         component: tagTemplate,
         context: {
           tag,
+          postFeaturedImages,
         },
       });
     });
