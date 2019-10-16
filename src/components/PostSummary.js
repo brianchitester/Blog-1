@@ -4,8 +4,8 @@ import Img from 'gatsby-image';
 
 import styles from './PostSummary.module.less';
 
-const renderThumbnail = (slug, title, thumbnail, featuredImages) => {
-  if (thumbnail) {
+const renderThumbnail = (slug, title, thumbnail) => {
+  if (thumbnail.childImageSharp) {
     return (
       <Link
         style={{ boxShadow: 'none' }}
@@ -18,18 +18,11 @@ const renderThumbnail = (slug, title, thumbnail, featuredImages) => {
       </Link>
     );
   }
-  if (featuredImages && featuredImages.length > 0) {
-    return (
-      <Link
-        style={{ boxShadow: 'none' }}
-        to={slug}
-        className={styles.thumbnail}
-      >
-        <img src={featuredImages[0].toString()} alt={title} />
-      </Link>
-    );
-  }
-  return null;
+  return (
+    <Link style={{ boxShadow: 'none' }} to={slug} className={styles.thumbnail}>
+      <img src={thumbnail.toString()} alt={title} />
+    </Link>
+  );
 };
 
 export default function PostSummary({
@@ -39,11 +32,10 @@ export default function PostSummary({
   title,
   date,
   thumbnail,
-  featuredImages,
 }) {
   return (
     <article key={slug} className={styles.article}>
-      {renderThumbnail(slug, title, thumbnail, featuredImages)}
+      {thumbnail && renderThumbnail(slug, title, thumbnail)}
       <div className={styles.summary}>
         <h3 className={styles.h3Style}>
           <Link style={{ boxShadow: 'none' }} to={slug}>

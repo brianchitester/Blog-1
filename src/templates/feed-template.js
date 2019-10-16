@@ -7,7 +7,12 @@ import PostSummary from '../components/PostSummary';
 import Pagination from '../components/Pagination';
 
 const Feed = ({ data, location, pageContext = {} }) => {
-  const { totalCount, current = 1, limit, postFeaturedImages } = pageContext;
+  const {
+    totalCount,
+    current = 1,
+    limit,
+    postFeaturedImageThumbnail,
+  } = pageContext;
   const siteTitle = data.site.siteMetadata.title;
   const posts = data.allMarkdownRemark.edges;
   const authors = data.allAuthorsJson.edges.reduce(
@@ -23,8 +28,10 @@ const Feed = ({ data, location, pageContext = {} }) => {
       slug={node.frontmatter.permalink || node.fields.slug}
       description={node.frontmatter.description || node.excerpt}
       author={authors[node.frontmatter.author]}
-      thumbnail={node.frontmatter.thumbnail}
-      featuredImages={postFeaturedImages[node.fields.slug]}
+      thumbnail={
+        node.frontmatter.thumbnail ||
+        postFeaturedImageThumbnail[node.fields.slug]
+      }
     />
   ));
 
@@ -80,7 +87,6 @@ export const pageQuery = graphql`
           fields {
             slug
           }
-          htmlAst
           frontmatter {
             date(formatString: "MMMM DD, YYYY")
             title
