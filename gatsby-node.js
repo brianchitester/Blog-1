@@ -43,6 +43,7 @@ exports.createPages = ({ graphql, actions }) => {
     // Create blog posts pages.
     const posts = result.data.allMarkdownRemark.edges;
     let tags = [];
+    const postFeaturedImageThumbnail = {};
     posts.forEach((post, index) => {
       const previous =
         index === posts.length - 1 ? null : posts[index + 1].node;
@@ -55,6 +56,10 @@ exports.createPages = ({ graphql, actions }) => {
           featuredImages = featuredImages.concat(node.properties.src);
         }
       });
+      if (featuredImages.length > 0) {
+        // eslint-disable-next-line prefer-destructuring
+        postFeaturedImageThumbnail[post.node.fields.slug] = featuredImages[0];
+      }
       createPage({
         path: url,
         component: blogPost,
@@ -83,6 +88,7 @@ exports.createPages = ({ graphql, actions }) => {
         component: tagTemplate,
         context: {
           tag,
+          postFeaturedImageThumbnail,
         },
       });
     });
@@ -105,6 +111,7 @@ exports.createPages = ({ graphql, actions }) => {
           limit: postsPerPage,
           skip: index * postsPerPage,
           current: index + 1,
+          postFeaturedImageThumbnail,
         },
       });
     });

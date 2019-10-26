@@ -7,7 +7,7 @@ import SEO from '../components/seo';
 import PostSummary from '../components/PostSummary';
 
 const Tags = ({ pageContext, data }) => {
-  const { tag } = pageContext;
+  const { tag, postFeaturedImageThumbnail } = pageContext;
   const siteTitle = `posts tagged with ${tag}`;
   const posts = data.allMarkdownRemark.edges;
   const authors = data.allAuthorsJson.edges.reduce(
@@ -21,6 +21,10 @@ const Tags = ({ pageContext, data }) => {
       date={node.frontmatter.date}
       description={node.frontmatter.description || node.excerpt}
       author={authors[node.frontmatter.author]}
+      thumbnail={
+        node.frontmatter.thumbnail ||
+        postFeaturedImageThumbnail[node.fields.slug]
+      }
     />
   ));
   return (
@@ -61,6 +65,13 @@ export const pageQuery = graphql`
             description
             permalink
             author
+            thumbnail {
+              childImageSharp {
+                fluid(maxWidth: 300) {
+                  ...GatsbyImageSharpFluid
+                }
+              }
+            }
           }
         }
       }

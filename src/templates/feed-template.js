@@ -7,13 +7,19 @@ import PostSummary from '../components/PostSummary';
 import Pagination from '../components/Pagination';
 
 const Feed = ({ data, location, pageContext = {} }) => {
-  const { totalCount, current = 1, limit } = pageContext;
+  const {
+    totalCount,
+    current = 1,
+    limit,
+    postFeaturedImageThumbnail,
+  } = pageContext;
   const siteTitle = data.site.siteMetadata.title;
   const posts = data.allMarkdownRemark.edges;
   const authors = data.allAuthorsJson.edges.reduce(
     (acc, { node }) => ({ ...acc, [node.id]: node.name }),
     {},
   );
+
   const renderFeed = posts.map(({ node }) => (
     <PostSummary
       {...node.frontmatter}
@@ -22,8 +28,13 @@ const Feed = ({ data, location, pageContext = {} }) => {
       slug={node.frontmatter.permalink || node.fields.slug}
       description={node.frontmatter.description || node.excerpt}
       author={authors[node.frontmatter.author]}
+      thumbnail={
+        node.frontmatter.thumbnail ||
+        postFeaturedImageThumbnail[node.fields.slug]
+      }
     />
   ));
+
   return (
     <Layout location={location} title={siteTitle}>
       <SEO
@@ -82,6 +93,13 @@ export const pageQuery = graphql`
             description
             permalink
             author
+            thumbnail {
+              childImageSharp {
+                fluid(maxWidth: 300) {
+                  ...GatsbyImageSharpFluid
+                }
+              }
+            }
           }
         }
       }

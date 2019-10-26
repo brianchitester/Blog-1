@@ -3,6 +3,7 @@ title: The Life-Changing Magic of Tidying JS
 date: '2019-09-30T18:11:52.750Z'
 author: 'bchitester'
 description: 'Applying the KonMari method to boost application performance'
+thumbnail: './book.png'
 tags:
   - javascript
   - react
