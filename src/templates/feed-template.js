@@ -15,10 +15,7 @@ const Feed = ({ data, location, pageContext = {} }) => {
   } = pageContext;
   const siteTitle = data.site.siteMetadata.title;
   const posts = data.allMarkdownRemark.edges;
-  const authors = data.allAuthorsJson.edges.reduce(
-    (acc, { node }) => ({ ...acc, [node.id]: node.name }),
-    {},
-  );
+  const authors = data.allAuthorsJson.nodes;
 
   const renderFeed = posts.map(({ node }) => (
     <PostSummary
@@ -27,7 +24,7 @@ const Feed = ({ data, location, pageContext = {} }) => {
       title={node.frontmatter.title || node.fields.slug}
       slug={node.frontmatter.permalink || node.fields.slug}
       description={node.frontmatter.description || node.excerpt}
-      author={authors[node.frontmatter.author]}
+      author={authors.find(a => a.id === node.frontmatter.author)}
       thumbnail={
         node.frontmatter.thumbnail ||
         postFeaturedImageThumbnail[node.fields.slug]
@@ -68,11 +65,10 @@ export const pageQuery = graphql`
       }
     }
     allAuthorsJson {
-      edges {
-        node {
-          id
-          name
-        }
+      nodes {
+        id
+        name
+        avatar
       }
     }
     allMarkdownRemark(

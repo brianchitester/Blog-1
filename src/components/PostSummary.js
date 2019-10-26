@@ -1,6 +1,8 @@
 import React, { Fragment } from 'react';
 import { Link } from 'gatsby';
+
 import Img from 'gatsby-image';
+import Avatar from './avatar.js';
 
 import styles from './PostSummary.module.less';
 
@@ -43,6 +45,7 @@ export default function PostSummary({
           </Link>
         </h3>
         <p
+          className={styles.description}
           dangerouslySetInnerHTML={{
             __html: description,
           }}
@@ -50,7 +53,8 @@ export default function PostSummary({
         <div className={styles.postMeta}>
           {author && (
             <Fragment>
-              <p className={styles.author}>{author}</p>
+              <Avatar author={author} size={30} />
+              <span className={styles.author}>{author.name}</span>
               <span className={styles.dot} />
             </Fragment>
           )}
