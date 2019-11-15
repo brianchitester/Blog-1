@@ -10,15 +10,17 @@ const Tags = ({ pageContext, data }) => {
   const { tag, postFeaturedImageThumbnail } = pageContext;
   const siteTitle = `posts tagged with ${tag}`;
   const posts = data.allMarkdownRemark.edges;
-  const authors = data.allAuthorsJson.nodes;
-
+  const authors = data.allAuthorsJson.edges.reduce(
+    (acc, { node }) => ({ ...acc, [node.id]: node }),
+    {},
+  );
   const renderedPost = posts.map(({ node }) => (
     <PostSummary
       title={node.frontmatter.title || node.fields.slug}
       slug={node.frontmatter.permalink || node.fields.slug}
       date={node.frontmatter.date}
       description={node.frontmatter.description || node.excerpt}
-      author={authors.find(a => a.id === node.frontmatter.author)}
+      author={authors[node.frontmatter.author]}
       thumbnail={
         node.frontmatter.thumbnail ||
         postFeaturedImageThumbnail[node.fields.slug]
@@ -38,10 +40,12 @@ export default Tags;
 export const pageQuery = graphql`
   query($tag: String) {
     allAuthorsJson {
-      nodes {
-        id
-        name
-        avatar
+      edges {
+        node {
+          id
+          name
+          avatar
+        }
       }
     }
     allMarkdownRemark(
